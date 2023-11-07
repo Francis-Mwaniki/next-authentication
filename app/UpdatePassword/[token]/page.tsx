@@ -18,7 +18,8 @@ export default function Home() {
   useEffect (()=>{
     const url = window.location.href;
     const token = url.split('/')[4];
-    console.log(token);
+    setToken(token);
+    console.log("token", token);
   }
   ,[])
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -27,6 +28,13 @@ export default function Home() {
     if(!password ){
       toast({
         title: 'Please fill all the fields',
+        description: 'Please try again',
+      })
+      return
+    }
+    if(!token){
+      toast({
+        title: 'No token found',
         description: 'Please try again',
       })
       return
