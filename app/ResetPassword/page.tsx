@@ -1,8 +1,10 @@
 "use client";
-import Image from 'next/image'
-import React from 'react'
-import { useToast } from "@/components/ui/use-toast"
+import Image from 'next/image';
+import React from 'react';
+import { useToast } from "@/components/ui/use-toast";
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import AxiosInstance from "@/lib/axiosInstance";
 
 export default function Home() {
   const { toast } = useToast()
@@ -13,10 +15,11 @@ export default function Home() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [reg_no, setReg_no] = React.useState('')
   const [confirmPassword, setConfirmPassword] = React.useState('')
+
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
    
-    if(!email || !password ){
+    if(!email){
       toast({
         title: 'Please fill all the fields',
         description: 'Please try again',
@@ -25,9 +28,24 @@ export default function Home() {
     }
   
     try {
-   
       setLoading(true)
-      console.log(email, password, reg_no);
+      console.log(email);
+      AxiosInstance.post('/api/user/forgot-password', {email: email})
+      .then((res) => {
+        console.log(res);
+        toast({
+          title: `Password reset link sent to ${email}`,
+          description: 'Please check your email',
+        })
+        setEmail('')
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          title: `Failed to send reset link`,
+          description: `${err.response.data.message}`,
+        })
+      })
       
 
       setTimeout(() => {

@@ -1,7 +1,8 @@
 "use client";
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useToast } from "@/components/ui/use-toast"
+import AxiosInstance from '@/lib/axiosInstance';
 import Link from 'next/link';
 
 export default function Home() {
@@ -13,6 +14,13 @@ export default function Home() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [reg_no, setReg_no] = React.useState('')
   const [confirmPassword, setConfirmPassword] = React.useState('')
+  const [token, setToken] = useState('');
+  useEffect (()=>{
+    const url = window.location.href;
+    const token = url.split('/')[4];
+    console.log(token);
+  }
+  ,[])
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
    
@@ -27,8 +35,29 @@ export default function Home() {
     try {
    
       setLoading(true)
-      console.log(email, password, reg_no);
-      
+       AxiosInstance.post(`api/user/reset-password/${token}`, {
+        password: password,
+      }).then((res) => {
+        console.log("res", res);
+        toast({
+          title: `${res.data.message}`,
+          description: 'Please login',
+        })
+        setEmail('')
+        setPassword('')
+        setReg_no('')
+        setConfirmPassword('')
+        /* GO to dashboard */
+        window.location.href = '/'
+      }
+      ).catch((err) => {
+        setLoading(false)
+        console.log("err", err);
+        toast({
+          title:`${err.response.data.message}`,
+          description: 'Please try again',
+        })
+      })
 
       setTimeout(() => {
         setLoading(false)

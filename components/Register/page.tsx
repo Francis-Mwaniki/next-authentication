@@ -3,16 +3,26 @@ import Image from 'next/image'
 import React from 'react'
 import { useToast } from "@/components/ui/use-toast"
 import Link from 'next/link';
-
+import AxiosInstance from '@/lib/axiosInstance';
+import { useRouter } from 'next/navigation'
+import Loader from '@/components/Loader'
 export default function Home() {
+  const router = useRouter()
   const { toast } = useToast()
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [error, setError] = React.useState('')
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
   const [showPassword, setShowPassword] = React.useState(false)
   const [reg_no, setReg_no] = React.useState('')
   const [confirmPassword, setConfirmPassword] = React.useState('')
+
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+    }, 3000)
+  }, [])
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
    
@@ -34,6 +44,33 @@ export default function Home() {
    
       setLoading(true)
       console.log(email, password, reg_no);
+      AxiosInstance.post('/api/user/register', {
+        email: email,
+        password: password,
+        phoneNumber: reg_no,
+        confirmPassword: confirmPassword
+      }).then((res) => {
+        console.log("res", res);
+        toast({
+          title: `${res.data.message}`,
+          description: 'Please login',
+        })
+        setEmail('')
+        setPassword('')
+        setReg_no('')
+        setConfirmPassword('')
+        /* GO to dashboard */
+        router.push('/')
+      }).catch((err) => {
+        setLoading(false)
+        console.log("err", err);
+        toast({
+          title:`${err.response.data.message}`,
+          description: 'Please try again',
+        })
+       
+       
+      })
       
 
       setTimeout(() => {
@@ -49,7 +86,9 @@ export default function Home() {
     }
   }
   return (
-    <main className="flex flex-col justify-center items-center h-screen overflow-x-hidden">
+    <>
+    {
+      loading ? <Loader /> :   <main className="flex flex-col justify-center items-center h-screen overflow-x-hidden">
 <div className=" w-96 bg-white sm:shadow-md rounded-lg p-8 flex flex-col justify-center items-center">
       <p className="title text-center text-4xl font-bold my-6">   Hi  <span className="text-teal-500">there</span></p>
       <form className="flex flex-col justify-center items-center gap-y-3" onSubmit={handleSubmit} >
@@ -82,5 +121,8 @@ export default function Home() {
      
     </div>
     </main>
+    }
+    </>
+  
   )
 }

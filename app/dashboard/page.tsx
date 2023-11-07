@@ -1,3 +1,5 @@
+import { ArrowLeftIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
 import React from 'react'
 
 type Props = {}
@@ -5,9 +7,19 @@ type Props = {}
 const Dashboard = (props: Props) => {
   return (
     <div className="flex flex-col justify-center items-center h-screen overflow-x-hidden">
-      <h4 className="text-2xl font-semibold text-gray-500 font-serif">
-        Hi hover me to see the magic
+      {/* go home */}
+     
+      <h4 className="text-2xl font-semibold text-gray-500 py-3">
+        {/* emoji */}
+        <span className="text-rose-500">👋</span>  Hello there 
       </h4>
+      <p className="text-gray-500 text-md">
+      click on the seal to view the message
+      </p>
+       
+      <p className="text-gray-500 text-sm pb-3">
+        Welcome to the dashboard
+      </p>
          <div className="card">
   <div
     className="relative bg-black w-[300px] sm:w-[350px] group transition-all duration-700 aspect-video flex items-center justify-center"
