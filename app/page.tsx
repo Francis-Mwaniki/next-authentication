@@ -1,14 +1,24 @@
-import React from 'react'
+"use client";
 import Login from '@/components/Login/page'
-
+import Loader from '@/components/Loader'
+import React from 'react'
 type Props = {}
 
-const page = (props: Props) => {
+const Home = () => {
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+    }, 4000)
+  }, [])
   return (
     <div>
-      <Login />
+      {
+        loading ? <Loader /> : <Login />
+      }
     </div>
   )
 }
 
-export default page
+export default Home
