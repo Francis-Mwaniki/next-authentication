@@ -24,7 +24,7 @@ export default function Home() {
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
    
-    if(!email || !password ){
+    if(!password ){
       toast({
         title: 'Please fill all the fields',
         description: 'Please try again',
